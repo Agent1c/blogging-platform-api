@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Blog Posts</h1>
+
+<!-- Search Form -->
+<form method="get" action="{% url 'blog:post_list' %}">
+    <input type="text" name="q" placeholder="Search...">
+    <input type="text" name="category" placeholder="Category">
+    <input type="date" name="published_after" placeholder="Published After">
+    <input type="text" name="tags" placeholder="Tags (comma-separated)">
+    <button type="submit">Search</button>
+</form>
+
+<!-- Blog Posts List -->
+{% if filter %}
+    <h2>Filtered by: {{ filter }}</h2>
+{% endif %}
+<ul>
+    {% for post in posts %}
+        <li>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content|truncatewords:30 }}</p> <!-- Truncate content -->
+            <p><strong>Author:</strong> <a href="{% url 'blog:posts_by_author' post.author.username %}">{{ post.author.username }}</a> | 
+               <strong>Category:</strong> <a href="{% url 'blog:posts_by_category' post.category.name %}">{{ post.category.name }}</a> | 
+               <strong>Published:</strong> {{ post.created_at|date:"F j, Y" }}</p> <!-- Format date -->
+        </li>
+    {% empty %}
+        <li>No posts available.</li>
+    {% endfor %}
+</ul>
+
+<!-- Create Post Section -->
+<h2>Create Post</h2>
+<form method="post" action="{% url 'blog:create_post' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create</button>
+</form>
+
+<!-- Comments Section -->
+<h2>Comments</h2>
+<ul>
+    {% for comment in comments %}
+        <li>
+            <strong>{{ comment.author }}:</strong> {{ comment.content }}
+            <br>
+            <small>Posted on {{ comment.created_at }}</small>
+        </li>
+    {% empty %}
+        <li>No comments yet.</li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+    <h3>Add a Comment</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+{% else %}
+    <p>You must be logged in to comment.</p>
+{% endif %}
+
+{% endblock %}

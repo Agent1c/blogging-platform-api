@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Category: {{ category }}</h1>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content }}</p>
+                <p><strong>Author:</strong> <a href="{% url 'posts_by_author' post.author.username %}">{{ post.author.username }}</a> | <strong>Category:</strong> <a href="{% url 'posts_by_category' post.category %}">{{ post.category }}</a> | <strong>Published:</strong> {{ post.created_at }}</p>
+            </li>
+        {% empty %}
+            <li>No posts available.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

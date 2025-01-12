@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Search Blog Posts</h1>
+    <form method="get" action="{% url 'search_posts' %}">
+        <input type="text" name="q" placeholder="Search..." value="{{ query }}">
+        <input type="text" name="category" placeholder="Category">
+        <input type="date" name="published_after" placeholder="Published After">
+        <input type="text" name="tags" placeholder="Tags (comma-separated)">
+        <button type="submit">Search</button>
+    </form>
+    <a href="{% url 'blog:post_list' %}">Back to all posts</a>
+{% endblock %}

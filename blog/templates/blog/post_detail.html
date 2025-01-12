@@ -1,0 +1,23 @@
+<h2>Comments</h2>
+<ul>
+    {% for comment in comments %}
+        <li>
+            <strong>{{ comment.author }}:</strong> {{ comment.content }}
+            <br>
+            <small>Posted on {{ comment.created_at }}</small>
+        </li>
+    {% empty %}
+        <li>No comments yet.</li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+    <h3>Add a Comment</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+{% else %}
+    <p>You must be logged in to comment.</p>
+{% endif %}
